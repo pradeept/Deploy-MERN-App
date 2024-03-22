@@ -1,0 +1,43 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: todo-ui
+spec:
+  replicas: 3
+  revisionHistoryLimit: 3
+  selector:
+    matchLabels:
+      app: todo-ui
+      tier: frontend
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 1
+  template:
+    metadata:
+      labels:
+        app: todo-ui
+        tier: frontend
+    spec:
+      containers:
+        - name: todo-ui-container
+          image: pradeept17/todo-frontend:v1
+          imagePullPolicy: Always
+          #resources:
+            #limits:
+              #cpu: "500m"
+              #memory: "550Mi"
+          ports:
+            - containerPort: 3000
+          env:
+            - name: REACT_APP_BASE_URL
+              valueFrom:
+                configMapKeyRef:
+                  key: react_app_base_url
+                  name: ui-configmap
+            - name: REACT_APP_AES_SECRET_KEY
+              valueFrom:
+                secretKeyRef:
+                  key: aes_secret
+                  name: ui-secret

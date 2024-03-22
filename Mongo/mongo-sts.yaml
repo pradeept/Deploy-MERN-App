@@ -1,0 +1,43 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: mongo-sts
+spec:
+  replicas: 3
+  revisionHistoryLimit: 2
+  serviceName: mongo-hl
+  selector:
+    matchLabels:
+      app: todo-mongodb
+      tier: database
+  template:
+    metadata:
+      labels:
+        app: todo-mongodb
+        tier: database
+    spec:
+      containers:
+        - name: mongo
+          image: mongo:4.4.6
+          resources:
+            requests:
+              cpu: "100m"
+              memory: "64Mi"
+            limits:
+              cpu: "200m"
+              memory: "128Mi"
+          command:
+            - mongod
+            - "--bind_ip_all"
+            - "--replSet"
+            - rs0
+          # volumeMounts:
+          #   - mountPath: "/data/db"
+          #     name: mongo-volume
+          ports:
+            - containerPort: 27017
+      # volumes:
+      #   - name: mongo-volume
+      #     persistentVolumeClaim:
+      #       claimName: mongo-pvc
+

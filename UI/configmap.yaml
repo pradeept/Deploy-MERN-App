@@ -1,0 +1,25 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: ui-configmap
+data:
+  react_app_base_url: todo-api-svc
+   
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+# REACT_APP_BASE_URL=<Local/online mongo URI>
+# REACT_APP_AES_SECRET_KEY=<String>

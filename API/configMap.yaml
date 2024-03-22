@@ -1,0 +1,7 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: api-configmap
+data:
+  port: "3001"
+  mongo_uri: mongodb://mongo-hl.pradeept-work.svc.cluster.local:27017

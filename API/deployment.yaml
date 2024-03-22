@@ -1,0 +1,67 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: todo-api
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: todo-api
+      tier: backend
+  revisionHistoryLimit: 3
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 1
+  template:
+    metadata:
+      labels:
+        app: todo-api
+        tier: backend
+    spec:
+      containers:
+        - name: todo-api-container
+          image: pradeept17/todo-backend:v2
+          imagePullPolicy: Always
+          resources:
+            requests:
+              cpu: "100m"
+              memory: "64Mi"
+            limits:
+              cpu: "200m"
+              memory: "128Mi"
+          ports:
+            - containerPort: 3001
+          command:
+          env:
+            - name: PORT
+              valueFrom:
+                configMapKeyRef:
+                  key: port
+                  name: api-configmap
+            - name: AES_SECRET_KEY
+              valueFrom:
+                secretKeyRef:
+                  key: aes_secret
+                  name: api-secret
+            - name: SHA3_DB_SECRET_KEY
+              valueFrom:
+                secretKeyRef:
+                  key: sha3_db_secret
+                  name: api-secret
+            - name: JWT_SECRET_KEY
+              valueFrom:
+                secretKeyRef:
+                  key: jwt_secret
+                  name: api-secret
+            - name: MONGO_URI
+              valueFrom:
+                configMapKeyRef:
+                  key: mongo_uri
+                  name: api-configmap
+# PORT=<Port Number>
+# AES_SECRET_KEY=<String>
+# SHA3_DB_SECRET_KEY=<String>
+# JWT_SECRET_KEY=<String>
+# MONGO_URI=<Local/online mongo URI>
